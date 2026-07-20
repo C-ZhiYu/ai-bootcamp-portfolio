@@ -11,3 +11,5 @@ OLLAMA_API_BASE = os.getenv("OLLAMA_API_BASE", "http://localhost:11434")
 
 DB_NAME = "chat_history.db"
 DEFAULT_MODEL="llama3.2:3b"
+
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")

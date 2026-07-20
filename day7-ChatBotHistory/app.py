@@ -1,9 +1,9 @@
 import streamlit as st
 import config
 from database.db_manager import init_db, get_sessions, create_session, save_message, get_chat_history
-from services.llm_service import get_ollama_stream, parse_stream_chunks
+from services.gemini_service import get_ai_response_stream, parse_stream_chunks
 
-st.set_page_config(page_title="Ollama SQLite Chatbot", layout="wide")
+st.set_page_config(page_title="Gemini SQLite Chatbot", layout="wide")
 init_db()
 
 if "current_session_id" not in st.session_state:
@@ -24,7 +24,7 @@ with st.sidebar:
             st.rerun()
 
     st.sidebar.divider()
-    model_name = st.sidebar.text_input("Ollama Model", value=config.DEFAULT_MODEL)
+    model_name = st.sidebar.text_input("Gemini Model", value=config.GEMINI_MODEL)
 
 st.title("Local LLM Chat")
 
@@ -42,8 +42,10 @@ else:
         save_message(st.session_state.current_session_id, "user", prompt)
 
         with st.chat_message("assistant"):
-            try:
-                raw_stream = get_ollama_stream(model_name, chat_history, prompt)
+            try:        
+                messages = chat_history + [{"role": "user", "content": prompt}]
+
+                raw_stream = get_ai_response_stream(messages)
                 clean_text_stream = parse_stream_chunks(raw_stream)
                 full_response = st.write_stream(clean_text_stream)
                 save_message(st.session_state.current_session_id, "assistant", full_response)
