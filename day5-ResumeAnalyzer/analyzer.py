@@ -24,6 +24,7 @@ from prompts import (
     STRUCTURE_AUDIT_PROMPT,
     BACKGROUND_FIT_PROMPT,
     OVERALL_SUMMARY_PROMPT,
+    DEGREE_ALIGNMENT_PROMPT
 )
 
 
@@ -177,7 +178,8 @@ def summarise_overall(report: dict) -> str:
         "bullets": report.get("bullets"),
         "jargon": report.get("jargon"),
         "structure": report.get("structure"),
-        "background_fit": report.get("background_fit"),
+        # "background_fit": report.get("background_fit"),
+        "degree_alignment": report.get("degree_alignment"),
     }
 
     return ask_text(
@@ -186,6 +188,13 @@ def summarise_overall(report: dict) -> str:
         max_tokens=400,
     )
 
+def analyse_degree_alignment(jd_profile: dict, degree_program: str) -> dict:
+    """JD profile + degree -> degree alignment dict."""
+    user = (
+        f"DEGREE PROGRAM: {degree_program}\n\n"
+        f"JD PROFILE:\n{json.dumps(jd_profile, indent=2)}"
+    )
+    return ask_json(DEGREE_ALIGNMENT_PROMPT, user, max_tokens=600)
 
 # ---------------------------------------------------------------------------
 # Score aggregation (§7.2) — NO LLM call
@@ -202,7 +211,7 @@ def compute_overall_score(report: dict) -> int:
         bullet_quality_avg   25%  (report["bullets"]["bullet_quality_avg"])
         structure_score      15%  (report["structure"]["structure_score"])
         jargon_score         10%  (report["jargon"]["jargon_score"])
-        background_fit_score 10%  (report["background_fit"]["background_fit_score"])
+        degree_alignment     10%  (report["degree_alignment"]["degree_alignment_score"])
 
     Returns:
         int — weighted average, rounded to the nearest whole number.
@@ -213,16 +222,15 @@ def compute_overall_score(report: dict) -> int:
     bullet = report.get("bullets", {}).get("bullet_quality_avg", 0)
     structure = report.get("structure", {}).get("structure_score", 0)
     jargon = report.get("jargon", {}).get("jargon_score", 0)
-    background = report.get("background_fit", {}).get(
-        "background_fit_score", 0
-    )
+    degree = report["degree_alignment"].get("degree_alignment_score", 0)
 
     score = (
         keyword * 0.40
         + bullet * 0.25
         + structure * 0.15
         + jargon * 0.10
-        + background * 0.10
+        + degree * 0.10
     )
 
     return round(score)
+

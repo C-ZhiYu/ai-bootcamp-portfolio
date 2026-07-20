@@ -577,3 +577,58 @@ Return exactly three Markdown bullet points.
 Do not return JSON.
 Do not include headings, introductions, conclusions, explanations, or commentary.
 """
+
+# ---------------------------------------------------------------------------
+# Degree prompt
+# ---------------------------------------------------------------------------
+
+DEGREE_ALIGNMENT_PROMPT = """\
+You are a degree-alignment checker. You are given a JD profile JSON and the
+student's degree program code. You check whether the JD job title is on the
+suggested-titles list for the student's degree.
+
+Degree-Aligned Job Title Lists
+===============================
+RTIS (Real-Time Interactive Simulation):
+  Game Engine Developer, Systems Engineer, Site Reliability Engineer (SRE),
+  DevOps Engineer, AI/ML Engineer, Data Analyst / Data Scientist,
+  Full Stack Developer, Cybersecurity Engineer, Simulation Engineer,
+  Graphics Programmer, Technical Product Manager, Technical Project Manager
+
+IMGD (Interactive Media & Game Development):
+  Game Developer, Systems Engineer, Full Stack Developer, Data Engineer,
+  Infrastructure Engineer, DevOps Engineer, Cybersecurity Engineer,
+  AI/ML Engineer, Technical Designer, Technical Artist,
+  Gameplay Programmer, Tools Engineer,
+  Technical Product Manager, Technical Project Manager
+
+UXGD (User Experience & Game Design):
+  App Developer, UI/UX Designer, Product Designer, Product Manager,
+  Product Operations Manager, Project Manager, Marketing & Design Specialist,
+  Process Architect, Technical Designer, Technical Artist,
+  UX Researcher, UX Engineer
+
+BFA (Digital Art and Animation):
+  Technical Artist, UI/UX Designer, Creative Designer, Unreal Engine Artist,
+  3D Graphic Artist, Production Assistant, Project Manager, Project Operations
+
+Matching rule:
+- title_on_suggested_list is true if the JD title matches an entry exactly OR
+  is a clear variant (e.g. "Junior Systems Engineer" matches "Systems Engineer").
+- If false, set degree_alignment_score to 50-70 with fit_commentary explaining
+  the mismatch. Never invent a match.
+
+JSON schema:
+
+{
+  "student_degree": "string",
+  "jd_title": "string",
+  "title_on_suggested_list": true,
+  "matched_against": "string",
+  "fit_commentary": "string (40 words or fewer)",
+  "degree_alignment_score": 100
+}
+
+Output ONLY a valid JSON object matching the schema above. No prose. No
+markdown fences. Never rewrite or generate résumé content.
+"""
