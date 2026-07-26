@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Pathfinding System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 0 8px rgba(0,0,0,.15);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select, button {
+            padding: 8px;
+            margin: 10px 0;
+        }
+
+        img {
+            width: 100%;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef;
+            border-radius: 5px;
+        }
+
+        .error {
+            color: red;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AI Pathfinding System</h1>
+
+<form method="POST">
+
+    <label>Start Node</label><br>
+
+    <select name="start">
+
+        {% for node in nodes %}
+        <option value="{{ node.id }}">
+            {{ node.id }} - {{ node.name }}
+        </option>
+        {% endfor %}
+
+    </select>
+
+    <br>
+
+    <label>End Node</label><br>
+
+    <select name="end">
+
+        {% for node in nodes %}
+        <option value="{{ node.id }}">
+            {{ node.id }} - {{ node.name }}
+        </option>
+        {% endfor %}
+
+    </select>
+
+    <br>
+
+    <button type="submit">
+        Find Shortest Path
+    </button>
+
+</form>
+
+
+{% if result %}
+
+<div class="result">
+
+{% if result.error %}
+
+<p class="error">{{ result.error }}</p>
+
+{% else %}
+
+<h3>Shortest Path</h3>
+
+<p>{{ result.path }}</p>
+
+<h3>Total Distance</h3>
+
+<p>{{ result.distance }}</p>
+
+{% endif %}
+
+</div>
+
+{% endif %}
+
+
+{% if image %}
+
+<h2>Generated Map</h2>
+
+<img src="{{ url_for('static', filename=image) }}">
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

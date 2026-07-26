@@ -1,0 +1,12 @@
+services:
+  pathfinding-app:
+    build: .
+    container_name: pathfinding-app
+
+    ports:
+      - "60003:60003"
+
+    volumes:
+      - .:/app
+
+    restart: unless-stopped
