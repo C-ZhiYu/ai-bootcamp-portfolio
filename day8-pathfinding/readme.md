@@ -1,38 +1,42 @@
-# AI Bootcamp Day 8 – Pathfinding Web Application
+# AI Bootcamp Day 8 – AI Pathfinding Web Application
 
-## Overview
-
-This project is a Flask-based web application that calculates and visualizes the shortest path between two locations using **Dijkstra's Algorithm**.
-
-The application loads node and edge information from text files, computes the shortest path, and displays the result on a generated map.
+A Flask-based web application that computes and visualizes the shortest path between two locations using **Dijkstra's Algorithm**. The application loads a map from text files, calculates the optimal route, and generates a visual representation of the path.
 
 ---
 
 ## Features
 
-- Load map data from `Node_Info.txt`
-- Load graph data from `Graph_Path.txt`
-- Compute the shortest path using Dijkstra's Algorithm
-- Visualize the graph using Matplotlib
-- Highlight the shortest path
-- Simple password authentication for editor mode
-- Unit tests using pytest
+- Load map data from text files (`Node_Info.txt` and `Graph_Path.txt`)
+- Compute the shortest path using **Dijkstra's Algorithm**
+- Visualize the map with **Matplotlib**
+- Highlight the computed shortest path
+- Simple password-based authentication for editor mode
+- Unit tests using **Pytest**
+- Docker support
+- One-command PowerShell startup script (`run.ps1`)
 
 ---
 
 ## Project Structure
 
-```
+```text
 day8-pathfinding/
 │
 ├── app.py
+├── run.ps1
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 ├── README.md
-├── docker-compose.yml
 │
 ├── data/
 │   ├── Node_Info.txt
 │   └── Graph_Path.txt
+│
+├── docs/
+│   ├── ai_review_notes.md
+│   ├── ci_result_summary.md
+│   └── test_plan.md
 │
 ├── src/
 │   ├── __init__.py
@@ -41,23 +45,38 @@ day8-pathfinding/
 │   ├── pathfinder.py
 │   └── visualizer.py
 │
+├── static/
+│   └── map.png
+│
 ├── templates/
 │   ├── index.html
 │   └── login.html
 │
-├── static/
-│   └── map.png
-│
-├── tests/
-│   ├── test_auth.py
-│   └── test_pathfinder.py
-│
-└── docs/
+└── tests/
+    ├── test_auth.py
+    └── test_pathfinder.py
 ```
 
 ---
 
+## Prerequisites
+
+Before running the project, ensure you have:
+
+- Python 3.12 or later
+- Git
+- Docker Desktop (optional, for Docker support)
+
+---
+
 ## Installation
+
+Clone the repository:
+
+```bash
+git clone <your-repository-url>
+cd day8-pathfinding
+```
 
 Create a virtual environment:
 
@@ -67,13 +86,13 @@ python -m venv .venv
 
 Activate the virtual environment.
 
-Windows:
+### Windows
 
-```bash
-.venv\Scripts\activate
+```powershell
+.venv\Scripts\Activate.ps1
 ```
 
-Install dependencies:
+Install the required packages:
 
 ```bash
 pip install -r requirements.txt
@@ -81,25 +100,40 @@ pip install -r requirements.txt
 
 ---
 
-## Running the Application
+## Quick Start
 
-Start the Flask application:
+A PowerShell helper script is included to simplify running the project.
 
-```bash
-python app.py
+Execute:
+
+```powershell
+.\run.ps1
 ```
 
-Open your browser and visit:
+The script will:
 
-```
+1. Install project dependencies (if required)
+2. Run all unit tests
+3. Build the Docker image
+4. Launch the Flask web application
+
+Once the application starts, open:
+
+```text
 http://localhost:60003
 ```
 
 ---
 
-## Running Tests
+## Manual Execution
 
-Run all unit tests:
+### Run the application
+
+```bash
+python app.py
+```
+
+### Run the unit tests
 
 ```bash
 python -m pytest
@@ -107,8 +141,22 @@ python -m pytest
 
 Expected output:
 
-```
+```text
+=====================
 7 passed
+=====================
+```
+
+### Build the Docker image
+
+```bash
+docker compose build
+```
+
+### Run the Docker container
+
+```bash
+docker compose up
 ```
 
 ---
@@ -119,11 +167,17 @@ Expected output:
 - Flask
 - Matplotlib
 - Pytest
-- HTML
-- CSS
+- HTML / CSS
+- Docker
 
 ---
 
-## Author
+## Project Highlights
 
-AI Bootcamp Day 8 Project
+- Implements **Dijkstra's Algorithm** for shortest path computation.
+- Visualizes graphs and routes using **Matplotlib**.
+- Provides a simple web interface built with **Flask**.
+- Includes automated unit tests with **Pytest**.
+- Supports containerization using **Docker**.
+
+---
