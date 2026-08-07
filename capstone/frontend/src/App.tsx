@@ -21,6 +21,7 @@ function App() {
   const [isChatLoading, setIsChatLoading] = useState(false);
 
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [liveAlerts, setLiveAlerts] = useState<string[]>([]);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +32,13 @@ function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/alerts')
+      .then(res => res.json())
+      .then(data => setLiveAlerts(data.alerts))
+      .catch(err => console.error("Failed to fetch alerts:", err));
+  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -105,6 +113,22 @@ function App() {
     <div className="w-full min-h-screen bg-gray-100 dark:bg-gray-950 py-10 px-4 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300 flex justify-center items-start">
       <div className={`w-full transition-all duration-500 ${result ? 'max-w-[1450px]' : 'max-w-3xl'} bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-200 dark:border-gray-800 p-8 md:p-12`}>
         
+        {/* LIVE ALERT Header */}
+        {liveAlerts.length > 0 && (
+          <div className="absolute top-0 left-0 w-full bg-red-600 text-white text-xs font-bold py-2 overflow-hidden flex items-center">
+            <div className="px-4 bg-red-700 h-full absolute left-0 z-10 flex items-center shadow-[10px_0_15px_-3px_rgba(220,38,38,1)]">
+              🚨 LIVE THREAT INTEL
+            </div>
+            <div className="animate-marquee whitespace-nowrap pl-32">
+              {liveAlerts.map((alert, idx) => (
+                <span key={idx} className="mx-8">
+                  • {alert}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-10 relative">
           <button 

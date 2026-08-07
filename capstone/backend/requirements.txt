@@ -7,3 +7,5 @@ python-multipart
 Pillow
 openai
 groq
+requests
+beautifulsoup4

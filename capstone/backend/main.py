@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from services.scam_service import analyze_scam, save_session, handle_followup
 from services.image_service import analyze_scam_image
+from services.scraper import fetch_scam_alerts
 
 load_dotenv()
 
@@ -57,3 +58,9 @@ async def analyze_image_endpoint(file: UploadFile = File(...), session_id: str =
 async def chat_endpoint(request: FollowUpRequest):
     reply = handle_followup(request.session_id, request.question)
     return {"reply": reply}
+
+@app.get("/api/alerts")
+async def get_alerts():
+    """Returns the latest threat intelligence alerts for the frontend banner."""
+    alerts = fetch_scam_alerts()
+    return {"alerts": alerts}

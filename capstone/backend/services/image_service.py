@@ -37,8 +37,14 @@ def analyze_scam_image(image_bytes: bytes) -> dict:
     try:
         openai_key = os.getenv("OPENAI_API_KEY")
         if openai_key:
-            # OpenAI requires images to be Base64 encoded strings
-            base64_image = base64.b64encode(image_bytes).decode('utf-8')
+            # Convert ANY image format (AVIF, BMP, etc.) to standard JPEG for OpenAI
+            image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            buffer = io.BytesIO()
+            image.save(buffer, format="JPEG")
+            clean_jpeg_bytes = buffer.getvalue()
+
+            # Base64 encode the clean JPEG bytes
+            base64_image = base64.b64encode(clean_jpeg_bytes).decode('utf-8')
             
             client = OpenAI(api_key=openai_key)
             
